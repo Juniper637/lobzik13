@@ -68,7 +68,7 @@ def star_detail(request, slug):
         'star_categories': categories,
     }
 
-    return render(request, 'lobzikapp/star-detail.html', context)
+    return render(request, 'lobzikapp/lobzikapp_detail.html', context)
 
 
 def about(request):
@@ -147,4 +147,11 @@ def add_star(request):
         'star_countries': countries,
         'star_categories': categories,
     }
-    return render(request, 'star/add-star.html', context)
+    return render(request, 'lobzikapp/add-star.html', context)
+
+def star_delete(request, pk):
+    star = get_object_or_404(Star, pk=pk)
+    if request.method == "POST":
+        star.delete()
+        return redirect('star_index')
+    return render(request, 'lobzikapp/star_confirm_delete.html', {'star': star})

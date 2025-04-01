@@ -21,7 +21,10 @@
       <strong>Обновлен:</strong> {{ star.time_update|date:"d.m.Y H:i" }}<br>
       <em>{{ star.content }}</em>
     </p>
-    <a href="{% url 'star_index' %}" class="btn btn-primary">Вернуться к списку</a>
+    <div class="btn-group" role="group">
+        <a href="{% url 'star_index' %}" class="btn btn-primary">Вернуться к списку</a>
+        <a href="{% url 'star_delete' star.pk %}" class="btn btn-danger">Удалить персону</a>
+    </div>
   </div>
 </div>
 {% endblock %}

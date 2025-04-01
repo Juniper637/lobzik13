@@ -1,0 +1,17 @@
+{% extends 'lobzikapp/base.html' %}
+{% block title %}Удаление {{ star.name }} - Borntoday.ru{% endblock %}
+
+{% block content %}
+<h4 class="mb-3">Подтверждение удаления</h4>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Вы уверены, что хотите удалить {{ star.name }}?</h5>
+        <p class="card-text">Это действие нельзя будет отменить.</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Да, удалить</button>
+            <a href="{% url 'star_detail' star.pk %}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

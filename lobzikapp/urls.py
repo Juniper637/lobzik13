@@ -17,6 +17,8 @@ urlpatterns = [
 
    # Знаменитости по виду деятельности
    path('industry/<slug:slug>/', views.stars_by_category, name='stars_by_category'),
+
+   path('star/<int:pk>/delete/', views.star_delete, name='star_delete'),  # новый путь для удаления
 ]
 
    
