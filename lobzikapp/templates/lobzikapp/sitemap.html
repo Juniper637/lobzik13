@@ -1,0 +1,41 @@
+<!-- templates/star/sitemap.html -->
+{% extends 'lobzikapp/base.html' %}
+{% load static %}
+
+{% block title %}Карта сайта - Borntoday.ru{% endblock %}
+
+{% block content %}
+    <div class="sitemap-container">
+        <h1>Карта сайта</h1>
+        
+        <!-- Алфавитная навигация -->
+        <div class="alphabet-nav mb-4">
+            {% for letter in alphabet %}
+                {% if letter in active_letters %}
+                    <a href="{% url 'sitemap_letter' letter=letter %}" class="btn btn-outline-primary btn-sm m-1">
+                        {{ letter }}
+                    </a>
+                {% else %}
+                    <span class="btn btn-outline-secondary btn-sm m-1 disabled">{{ letter }}</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        
+        {% if stars %}
+            <ul class="stars-list list-unstyled">
+                {% for star in stars %}
+                    <li class="mb-2">
+                        <a href="{% url 'star_detail' slug=star.slug %}">{{ star.name }}</a>
+                        {% if star.birth_date %}
+                            ({{ star.get_age }} лет)
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <p class="text-muted">Звезды не найдены</p>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">Звезды не найдены</p>
+        {% endif %}
+    </div>
+{% endblock %}

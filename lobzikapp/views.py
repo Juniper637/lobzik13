@@ -12,6 +12,7 @@ def index(request):
     """
     # Получаем все опубликованные звезды
     all_stars = Star.objects.filter(is_published=True)
+
     
     # Получаем текущую дату
     today = date.today()
@@ -72,18 +73,25 @@ def star_detail(request, slug):
 
 
 def about(request):
-    """
-    Страница «О сайте».
-    """
-    # Получаем все страны и категории для меню
-    countries = Country.objects.all()
-    categories = Category.objects.all()
+    # Подсчет статистики
+    stats = {
+        'stars': Star.objects.filter(is_published=True).count(),
+        'countries': Country.objects.count(),
+        'categories': Category.objects.count(),
+    }
+    
+    # Описание сайта (можно вынести в настройки или модель, если нужно)
+    description = (
+        "Borntoday.ru — это сайт, посвященный дням рождения знаменитостей. "
+        "Здесь вы найдете информацию о звездах, их биографии, даты рождения и многое другое."
+    )
     
     context = {
         'title': 'О сайте',
-        'description': 'Сайт создан в учебных целях. Данные сгенерированы нейросетью.',
-        'star_countries': countries,
-        'star_categories': categories,
+        'description': description,
+        'stats': stats,
+        'star_countries': Country.objects.all(),  # Для боковой панели
+        'star_categories': Category.objects.all(),  # Для боковой панели
     }
     return render(request, 'lobzikapp/about.html', context)
 
@@ -155,3 +163,56 @@ def star_delete(request, pk):
         star.delete()
         return redirect('star_index')
     return render(request, 'lobzikapp/star_confirm_delete.html', {'star': star})
+
+def sitemap(request):
+    stars = Star.objects.filter(is_published=True).order_by('name')
+
+    RUSSIAN_ALPHABET = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЭЮЯ'
+
+    
+    # Список букв, на которые есть знаменитости
+    active_letters = set()
+    for star in stars:
+        first_letter = star.name[0].upper()
+        if first_letter in RUSSIAN_ALPHABET:
+            active_letters.add(first_letter)
+    
+    context = {
+        'stars': stars,
+        'star_countries': Country.objects.all(),
+        'star_categories': Category.objects.all(),
+        'alphabet': RUSSIAN_ALPHABET,
+        'active_letters': active_letters,
+    }
+    return render(request, 'lobzikapp/sitemap.html', context)
+
+def sitemap_letter(request, letter):
+
+    RUSSIAN_ALPHABET = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЭЮЯ'
+
+    # Приводим букву к верхнему регистру
+    letter = letter.upper()
+    
+    # Фильтруем звезды по первой букве
+    stars = Star.objects.filter(
+        is_published=True,
+        name__istartswith=letter
+    ).order_by('name')
+    
+    # Список букв, на которые есть знаменитости
+    all_stars = Star.objects.filter(is_published=True)
+    active_letters = set()
+    for star in all_stars:
+        first_letter = star.name[0].upper()
+        if first_letter in RUSSIAN_ALPHABET:
+            active_letters.add(first_letter)
+    
+    context = {
+        'stars': stars,
+        'star_countries': Country.objects.all(),
+        'star_categories': Category.objects.all(),
+        'alphabet': RUSSIAN_ALPHABET,
+        'active_letters': active_letters,
+        'current_letter': letter,
+    }
+    return render(request, 'lobzikapp/sitemap_letter.html', context)

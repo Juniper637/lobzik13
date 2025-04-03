@@ -1,0 +1,43 @@
+<!-- templates/star/sitemap_letter.html -->
+{% extends 'lobzikapp/base.html' %}
+{% load static %}
+
+{% block title %}Карта сайта - {{ current_letter }} - Borntoday.ru{% endblock %}
+
+{% block content %}
+    <div class="sitemap-container">
+        <h1>Карта сайта - Знаменитости на букву {{ current_letter }}</h1>
+        
+        <!-- Алфавитная навигация -->
+        <div class="alphabet-nav mb-4">
+            <a href="{% url 'sitemap' %}" class="btn btn-outline-primary btn-sm m-1">Все</a>
+            {% for letter in alphabet %}
+                {% if letter in active_letters %}
+                    <a href="{% url 'sitemap_letter' letter=letter %}" 
+                       class="btn btn-outline-primary btn-sm m-1 {% if letter == current_letter %}active{% endif %}">
+                        {{ letter }}
+                    </a>
+                {% else %}
+                    <span class="btn btn-outline-secondary btn-sm m-1 disabled">{{ letter }}</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        
+        {% if stars %}
+            <ul class="stars-list list-unstyled">
+                {% for star in stars %}
+                    <li class="mb-2">
+                        <a href="{% url 'star_detail' slug=star.slug %}">{{ star.name }}</a>
+                        {% if star.birth_date %}
+                            ({{ star.get_age }} лет)
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <p class="text-muted">Звезды на букву {{ current_letter }} не найдены</p>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">Звезды на букву {{ current_letter }} не найдены</p>
+        {% endif %}
+    </div>
+{% endblock %}
