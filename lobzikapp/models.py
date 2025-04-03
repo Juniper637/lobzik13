@@ -79,6 +79,23 @@ class Star(models.Model):
         if (today.month, today.day) < (self.birth_date.month, self.birth_date.day):
             age -= 1
         return age
+    def get_age_with_correct_word(self):
+        """Возвращает возраст с правильно склоненным словом 'год'."""
+        age = self.get_age()
+        if age is None:  # На случай, если возраст не удалось вычислить
+            return "Возраст неизвестен"
+
+        last_digit = age % 10
+        last_two_digits = age % 100
+
+        if 11 <= last_two_digits <= 14:
+            return f"{age} лет"
+        elif last_digit == 1:
+            return f"{age} год"
+        elif 2 <= last_digit <= 4:
+            return f"{age} года"
+        else:
+            return f"{age} лет"
 
     def save(self, *args, **kwargs):
         if not self.slug:

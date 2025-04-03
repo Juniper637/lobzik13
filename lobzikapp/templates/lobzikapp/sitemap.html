@@ -1,4 +1,4 @@
-<!-- templates/star/sitemap.html -->
+<!-- templates/lobzikapp/sitemap.html -->
 {% extends 'lobzikapp/base.html' %}
 {% load static %}
 
@@ -8,7 +8,6 @@
     <div class="sitemap-container">
         <h1>Карта сайта</h1>
         
-        <!-- Алфавитная навигация -->
         <div class="alphabet-nav mb-4">
             {% for letter in alphabet %}
                 {% if letter in active_letters %}
@@ -27,7 +26,7 @@
                     <li class="mb-2">
                         <a href="{% url 'star_detail' slug=star.slug %}">{{ star.name }}</a>
                         {% if star.birth_date %}
-                            ({{ star.get_age }} лет)
+                            ({{ star.get_age_with_correct_word }})
                         {% endif %}
                     </li>
                 {% empty %}
